@@ -1,12 +1,14 @@
-require 'sinatra'
-require 'scrolls'
+require 'webrick'
 require 'securerandom'
-require 'json'
 
-get '/*' do
-  content_type :json
-  id = SecureRandom.uuid()
-  output = {"id"=>id, "params"=>params}
-  Scrolls.log(output)
-  output.to_json
+$stdout.sync = true
+
+server = WEBrick::HTTPServer.new Port: ENV.fetch("PORT", "4567")
+server.mount_proc "/" do |req, res|
+  id = SecureRandom.uuid
+  puts "id=#{id}"
+  res.body = "id=#{id}"
 end
+
+trap("INT"){ server.stop }
+server.start

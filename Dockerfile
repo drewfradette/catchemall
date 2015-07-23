@@ -27,14 +27,7 @@ RUN curl -s https://s3pository.heroku.com/node/v$NODE_ENGINE/node-v$NODE_ENGINE-
 ENV PATH /app/heroku/node/bin:$PATH
 WORKDIR /app/src
 
-COPY Gemfile /app/src/
-COPY Gemfile.lock /app/src/
-
-USER root
-RUN chown app /app/src/Gemfile* # ensure user can modify the Gemfile.lock
 USER app
-
-RUN bundle install # TODO: desirable if --path parameter were passed
 
 COPY . /app/src
 
